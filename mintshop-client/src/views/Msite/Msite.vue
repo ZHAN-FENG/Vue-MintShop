@@ -1,7 +1,7 @@
 <template>
   <section class="msite">
     <!--首页头部title-->
-    <HeaderTop title="芝罘区鲁东大学北区(青年南路)">
+    <HeaderTop title="广东创新科技职业学院">
       <!-- 要使用slot="left"指定插入的插槽位置 -->
       <span class="header_search" slot="left">
         <i class="iconfont icon-sousuo"></i>
@@ -12,97 +12,46 @@
         </span>
       </span>
     </HeaderTop>
+
     <!--首页导航轮播-->
     <nav class="msite_nav">
-      <div class="swiper-container">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide">
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container"></div>
-              <span>甜品饮品</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container"></div>
-              <span>商超便利</span>
-            </a>
-            <!--下面的图片省略-->
-          </div>
-          <div class="swiper-slide">
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container"></div>
-              <span>甜品饮品</span>
-            </a>
-            <!--同样省略-->
-          </div>
-        </div>
-        <!-- 轮播图页码 -->
-        <div class="swiper-pagination"></div>
-      </div>
+      <swiper :options="swiperOption">
+        <!-- slides -->
+        <swiper-slide>I'm Slide 1</swiper-slide>
+        <swiper-slide>I'm Slide 2</swiper-slide>
+        <swiper-slide>I'm Slide 3</swiper-slide>
+        <!-- Optional controls -->
+        <div class="swiper-pagination" slot="pagination"></div>
+      </swiper>
     </nav>
+
     <!--首页附近商家列表-->
-    <div class="msite_shop_list">
-      <div class="shop_header">
-        <i class="iconfont icon-xuanxiang"></i>
-        <span class="shop_header_title">附近商家</span>
-      </div>
-      <div class="shop_container">
-        <ul class="shop_list">
-          <li class="shop_li border-1px">
-            <a>
-              <div class="shop_left"></div>
-              <div class="shop_right">
-                <section class="shop_detail_header">
-                  <h4 class="shop_title ellipsis">锄禾日当午，汗滴禾下土</h4>
-                  <ul class="shop_detail_ul">
-                    <li class="supports">保</li>
-                    <li class="supports">准</li>
-                    <li class="supports">票</li>
-                  </ul>
-                </section>
-                <section class="shop_rating_order">
-                  <section class="shop_rating_order_left">
-                    <div class="star star-24">
-                      <span class="star-item on"></span>
-                      <span class="star-item on"></span>
-                      <span class="star-item on"></span>
-                      <span class="star-item half"></span>
-                      <span class="star-item off"></span>
-                    </div>
-                    <div class="rating_section">
-                      3.6
-                    </div>
-                    <div class="order_section">
-                      月售106单
-                    </div>
-                  </section>
-                  <section class="shop_rating_order_right">
-                    <span class="delivery_style delivery_right">硅谷专送</span>
-                  </section>
-                </section>
-                <section class="shop_distance">
-                  <p class="shop_delivery_msg">
-                    <span>¥20起送</span>
-                    <span class="segmentation">/</span>
-                    <span>配送费约¥5</span>
-                  </p>
-                </section>
-              </div>
-            </a>
-          </li>
-          <!--省略其他店铺展示-->
-        </ul>
-      </div>
-    </div>
+    <ShopList></ShopList>
+    <ShopList></ShopList>
   </section>
 </template>
 
 <script>
 import HeaderTop from '@/components/HeaderTop/HeaderTop'
+import ShopList from '@/components/ShopList/ShopList'
 
 export default {
   name: 'Msite',
   components: {
     HeaderTop,
+    ShopList,
+  },
+  data() {
+    return {
+      swiperOption: {
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        autoplay: true,
+        loop: true,
+      },
+    }
   },
 }
 </script>
