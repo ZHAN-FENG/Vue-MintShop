@@ -1,7 +1,7 @@
 <template>
   <section class="msite">
     <!--首页头部title-->
-    <HeaderTop title="广东创新科技职业学院">
+    <HeaderTop :title="address.name">
       <!-- 要使用slot="left"指定插入的插槽位置 -->
       <span class="header_search" slot="left">
         <i class="iconfont icon-sousuo"></i>
@@ -15,18 +15,42 @@
 
     <!--首页导航轮播-->
     <nav class="msite_nav">
-      <swiper :options="swiperOption">
+      <swiper
+        class="swiper-wrapper"
+        :options="swiperOption"
+        v-if="categorysArr.length > 0"
+      >
         <!-- slides -->
-        <swiper-slide>I'm Slide 1</swiper-slide>
-        <swiper-slide>I'm Slide 2</swiper-slide>
-        <swiper-slide>I'm Slide 3</swiper-slide>
+        <swiper-slide
+          class="swiper-slide"
+          v-for="(pages, index) in categorysArr"
+          :key="index"
+        >
+          <a
+            href="javascript:"
+            class="link_to_food"
+            v-for="(item, index) in pages"
+            :key="index"
+          >
+            <div class="food_container">
+              <img :src="baseImageUrl + item.image_url" alt="" />
+            </div>
+            <span>{{ item.title }}</span>
+          </a>
+        </swiper-slide>
+
         <!-- Optional controls -->
-        <div class="swiper-pagination" slot="pagination"></div>
+        <div
+          class="swiper-pagination"
+          slot="pagination"
+          v-if="categorysArr.length > 1"
+        ></div>
       </swiper>
+
+      <img src="./images/msite_back.svg" alt="" v-else />
     </nav>
 
     <!--首页附近商家列表-->
-    <ShopList></ShopList>
     <ShopList></ShopList>
   </section>
 </template>
@@ -34,6 +58,7 @@
 <script>
 import HeaderTop from '@/components/HeaderTop/HeaderTop'
 import ShopList from '@/components/ShopList/ShopList'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Msite',
@@ -43,6 +68,7 @@ export default {
   },
   data() {
     return {
+      baseImageUrl: 'https://fuss10.elemecdn.com',
       swiperOption: {
         pagination: {
           el: '.swiper-pagination',
@@ -52,6 +78,21 @@ export default {
         loop: true,
       },
     }
+  },
+  computed: {
+    ...mapState(['address', 'categorys']),
+    categorysArr() {
+      const { categorys } = this
+      const arr = []
+      for (let i = 0, len = categorys.length; i < len; i += 8) {
+        arr.push(categorys.slice(i, i + 8))
+      }
+      return arr
+    },
+  },
+  mounted() {
+    this.$store.dispatch('getCategorys')
+    this.$store.dispatch('getShops')
   },
 }
 </script>
