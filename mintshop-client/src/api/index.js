@@ -6,6 +6,7 @@ import ajax from './ajax'
 // 定义BASE_URL
 // const BASE_URL = 'http://local:4000'
 const BASE_URL = '/api'
+// const SEARCH_SHOPS_BASE_URL = '/searchShopsApi'
 
 /**
  * 获取地址信息(根据经纬度串)

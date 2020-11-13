@@ -1,65 +1,70 @@
 <template>
-  <section class="msite">
-    <!--首页头部title-->
+  <div class="msite">
     <HeaderTop :title="address.name">
-      <!-- 要使用slot="left"指定插入的插槽位置 -->
-      <span class="header_search" slot="left">
+      <router-link slot="left" to="/search" class="header_search">
         <i class="iconfont icon-sousuo"></i>
-      </span>
-      <span class="header_login" slot="right">
-        <span class="header_login_text">
-          登录|注册
-        </span>
-      </span>
-    </HeaderTop>
-
-    <!--首页导航轮播-->
-    <nav class="msite_nav">
-      <swiper
-        class="swiper-wrapper"
-        :options="swiperOption"
-        v-if="categorysArr.length > 0"
+      </router-link>
+      <router-link
+        slot="right"
+        :to="userInfo._id ? '/userinfo' : '/login'"
+        class="header_login"
       >
-        <!-- slides -->
-        <swiper-slide
-          class="swiper-slide"
-          v-for="(pages, index) in categorysArr"
-          :key="index"
+        <span class="header_login_text" v-if="!userInfo._id">登录|注册</span>
+        <!-- 如果已经登录则显示一个icon -->
+        <span class="header_login_text" v-else>
+          <i class="iconfont icon-yonghuming"></i>
+        </span>
+      </router-link>
+    </HeaderTop>
+    <nav class="msite_nav">
+      <div class="swiper-container" v-if="categorys.length">
+        <swiper
+          class="swiper-wrapper"
+          :options="swiperOption"
+          v-if="categorysArr.length > 0"
         >
-          <a
-            href="javascript:"
-            class="link_to_food"
-            v-for="(item, index) in pages"
+          <!-- slides -->
+          <swiper-slide
+            class="swiper-slide"
+            v-for="(pages, index) in categorysArr"
             :key="index"
           >
-            <div class="food_container">
-              <img :src="baseImageUrl + item.image_url" alt="" />
-            </div>
-            <span>{{ item.title }}</span>
-          </a>
-        </swiper-slide>
+            <a
+              href="javascript:"
+              class="link_to_food"
+              v-for="(item, index) in pages"
+              :key="index"
+            >
+              <div class="food_container">
+                <img :src="baseImageUrl + item.image_url" alt="" />
+              </div>
+              <span>{{ item.title }}</span>
+            </a>
+          </swiper-slide>
 
-        <!-- Optional controls -->
-        <div
-          class="swiper-pagination"
-          slot="pagination"
-          v-if="categorysArr.length > 1"
-        ></div>
-      </swiper>
-
+          <!-- Optional controls -->
+          <div
+            class="swiper-pagination"
+            slot="pagination"
+            v-if="categorysArr.length > 1"
+          ></div>
+        </swiper>
+      </div>
       <img src="./images/msite_back.svg" alt="" v-else />
     </nav>
-
-    <!--首页附近商家列表-->
-    <ShopList></ShopList>
-  </section>
+    <div class="msite_shop_list">
+      <div class="shop_header">
+        <span class="shop_header_title">附近商家</span>
+      </div>
+      <ShopList></ShopList>
+    </div>
+  </div>
 </template>
 
 <script>
 import HeaderTop from '@/components/HeaderTop/HeaderTop'
 import ShopList from '@/components/ShopList/ShopList'
 import { mapState } from 'vuex'
-
 export default {
   name: 'Msite',
   components: {
@@ -80,11 +85,29 @@ export default {
     }
   },
   computed: {
-    ...mapState(['address', 'categorys']),
+    ...mapState(['address', 'categorys', 'userInfo']),
+    /**
+     * 根据categorys一维数组生成一个2维数组,小数组中的元素个数最大是8
+     */
+    // categorysArr () {
+    //     const { categorys } = this;
+    //     const arr = [];
+    //     let minArr = [];
+    //     categorys.forEach(data => {
+    //         if (minArr.length === 8) {
+    //             minArr = []
+    //         }
+    //         if (minArr.length === 0) {
+    //             arr.push(minArr)
+    //         }
+    //         minArr.push(data)
+    //     });
+    //     return arr
+    // },
     categorysArr() {
       const { categorys } = this
       const arr = []
-      for (let i = 0, len = categorys.length; i < len; i += 8) {
+      for (let i = 0; i < categorys.length; i += 8) {
         arr.push(categorys.slice(i, i + 8))
       }
       return arr

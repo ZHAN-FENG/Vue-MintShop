@@ -1,25 +1,110 @@
 <template>
-  <section class="search">
+  <div class="search">
     <HeaderTop title="搜索"></HeaderTop>
-    <form class="search_form" action="#">
-      <input
-        type="search"
-        name="search"
-        placeholder="请输入商家或美食名称"
-        class="search_input"
-      />
+    <form action="" class="search_form" @submit.prevent="search">
+      <label>
+        <input
+          type="search"
+          class="search_input"
+          placeholder="请输入商家或美食名称"
+          v-model.trim="keyword"
+        />
+      </label>
       <input type="submit" class="search_submit" />
     </form>
-  </section>
+    <section class="list">
+      <ul class="list_container" v-if="!noSearchShops">
+        <router-link
+          tag="li"
+          :to="{ path: '/shop', query: { id: item.id } }"
+          v-for="item in searchShops"
+          :key="item.id"
+          class="list_li"
+        >
+          <section class="item_left">
+            <img
+              :src="imgBaseUrl + item.image_path"
+              alt=""
+              class="restaurant_img"
+            />
+          </section>
+          <section class="item_right">
+            <div class="item_right_text">
+              <p>
+                <span>{{ item.name }}</span>
+              </p>
+              <p>月售{{ item.month_sales || item.recent_order_num }}单</p>
+              <p>
+                {{
+                  item.delivery_fee || item.float_minimum_order_amount
+                }}
+                元起送 / 距离{{ item.distance }}
+              </p>
+            </div>
+          </section>
+        </router-link>
+      </ul>
+      <div class="search_none" v-else>很抱歉！无搜索结果</div>
+    </section>
+  </div>
 </template>
 
 <script>
+import BScroll from '@better-scroll/core'
+import { mapState } from 'vuex'
 import HeaderTop from '@/components/HeaderTop/HeaderTop'
-
 export default {
   name: 'Search',
   components: {
     HeaderTop,
+  },
+  computed: {
+    ...mapState(['searchShops']),
+  },
+  data() {
+    return {
+      // bscroll: null,
+      keyword: '',
+      imgBaseUrl: 'http://cangdu.org:8001/img/',
+      noSearchShops: false,
+    }
+  },
+  mounted() {
+    // this.bscroll = new BScroll(this.$refs.list, {
+    //     click: true
+    // })
+  },
+  methods: {
+    refresh() {
+      this.bscroll.refresh()
+    },
+    search() {
+      //得到搜索关键字
+      const keyword = this.keyword.trim()
+      // console.log(keyword);
+      //进行搜索
+      if (keyword) {
+        this.$store.dispatch('searchShops', {
+          keyword,
+          callback: () => {
+            this.$nextTick(() => {
+              new BScroll('.list', {
+                click: true,
+              })
+            })
+            // setTimeout(() => {
+            //     console.log('refresh');
+            //     this.refresh()
+            // }, 1000)
+          },
+        })
+      }
+    },
+  },
+  watch: {
+    searchShops(value) {
+      this.noSearchShops = !value.length
+    },
   },
 }
 </script>
