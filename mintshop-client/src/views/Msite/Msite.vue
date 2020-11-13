@@ -1,6 +1,6 @@
 <template>
   <div class="msite">
-    <HeaderTop :title="address.name">
+    <HeaderTop title="广东创新科技职业学院">
       <router-link slot="left" to="/search" class="header_search">
         <i class="iconfont icon-sousuo"></i>
       </router-link>
@@ -86,24 +86,6 @@ export default {
   },
   computed: {
     ...mapState(['address', 'categorys', 'userInfo']),
-    /**
-     * 根据categorys一维数组生成一个2维数组,小数组中的元素个数最大是8
-     */
-    // categorysArr () {
-    //     const { categorys } = this;
-    //     const arr = [];
-    //     let minArr = [];
-    //     categorys.forEach(data => {
-    //         if (minArr.length === 8) {
-    //             minArr = []
-    //         }
-    //         if (minArr.length === 0) {
-    //             arr.push(minArr)
-    //         }
-    //         minArr.push(data)
-    //     });
-    //     return arr
-    // },
     categorysArr() {
       const { categorys } = this
       const arr = []
