@@ -77,7 +77,3 @@ function sendCode(phone, code, callback) {
 }
 exports.sendCode = sendCode;
 
-/*
-sendCode('13716962779', randomCode(6), function (success) {
-    console.log(success);
-})*/
