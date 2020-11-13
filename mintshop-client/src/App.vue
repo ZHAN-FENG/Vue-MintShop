@@ -1,33 +1,40 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <keep-alive>
+      <router-view/>
+    </keep-alive>
     <FooterGuide v-show="$route.meta.showFooter"></FooterGuide>
   </div>
 </template>
 
 <script>
 import FooterGuide from '@/components/FooterGuide/FooterGuide'
-import { mapActions } from 'vuex'
-
+import { mapActions } from 'vuex';
 export default {
-  name: 'App',
   components: {
-    FooterGuide,
+    FooterGuide
   },
   mounted() {
-    this.$store.dispatch('getAddress')
-    this.getUserInfo()
+    //触发调用Action方法的方式
+
+    //第一种方法： 通过this.$store.dispatch
+    this.$store.dispatch('getAddress');
+    // this.$store.dispatch('getUserInfo');
+
+    // 第二种方法：mapActions 语法糖
+    // this.getAddress();
+    this.getUserInfo();
+
   },
   methods: {
-    ...mapActions(['getAddress', 'categorys', 'getUserInfo']),
-  },
+    ...mapActions(['getAddress', 'getUserInfo'])
+  }
 }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
-// 整个应用组件的样式
-  #app
-    width 100%
-    height 100%
-    background #f5f5f5
+<style lang="stylus">
+#app
+  width 100%
+  height 100%
+  background #f5f5f5
 </style>
